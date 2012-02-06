@@ -1,0 +1,191 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>TvNavigationController example</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="TvNavigationController.js"></script>
+
+    <style type="text/css">
+        body {
+            width: 632px;
+            border: 1px dashed black;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        #zone1, #zone2, #zone3 {
+            border: 1px solid black;
+            padding: 10px;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        #zone2 {
+            width: 486px;
+            margin: 20px 0 0 0;
+        }
+
+        #zone2 ul {
+            overflow: hidden;
+            padding: 0 0 10px 0;
+            margin: 0;
+        }
+
+        #zone3 {
+            width: 52px;
+            float: right;
+             margin: 20px 0 0 0;
+        }
+
+        li {
+            float: left;
+            list-style: none;
+        }
+
+        a {
+            display: block;
+            text-decoration: none;
+            width: 50px;
+            height: 50px;
+            border: 1px solid black;
+            margin-right: 10px;
+        }
+
+        #zone3 a {
+            margin: 0 0 10px 0;
+        }
+
+        .last, #zone3 a.last, #zone2 ul.last {
+            margin: 0px;
+            padding-bottom: 0px;
+        }
+
+        .selected {
+            border: 1px solid red;
+        }
+
+    </style>
+    <script type="text/javascript">
+
+jQuery(document).ready(function()
+{
+    var that = this;
+
+    var zone1_items = jQuery('#zone1 .item');
+    var zone2_items = jQuery('#zone2 .item');
+    var zone3_items = jQuery('#zone3 .item');
+
+    this.nav_controller = new TvNavigationController('item', 'selected');
+
+    jQuery('.item').on('click', function(e)
+    {
+        e.preventDefault();
+        that.nav_controller.selectItem(zone1_items.first());
+    });
+
+    this.nav_controller.addZone('#zone1', 'row', {
+        up: {},
+        down: zone2_items.first()
+    },
+    function(current_item, next_item)
+    {
+        if (next_item.hasClass('skip'))
+        {
+            next_item.text('skipped');
+            next_item = (current_item.hasClass('prev')) ? jQuery('.next') : jQuery('.prev');
+        }
+
+        return next_item;
+    });
+
+    this.nav_controller.addZone('#zone2', 'grid', {
+        left: zone3_items.first(),
+        right: zone3_items.first(),
+        up: zone1_items.first(),
+        down: zone1_items.first()
+    });
+
+    this.nav_controller.addZone('#zone3', 'col', {
+        left: function(current_item)
+        {
+            if (current_item.is(zone3_items.last()))
+            {
+                return zone2_items.last();
+            }
+            return zone2_items.first();
+        },
+        right: function(current_item)
+        {
+            if (current_item.is(zone3_items.last()))
+            {
+                return zone2_items.first();
+            }
+            return zone2_items.first();
+        },
+        up: zone1_items.last(),
+        down: zone1_items.last()
+    });
+
+    this.nav_controller.start(zone1_items.first());
+});
+
+    </script>
+</head>
+<body>
+
+    <ul id="zone1">
+        <li><a class="item" href="#">&nbsp;</a><li>
+        <li><a class="item" href="#">&nbsp;</a><li>
+        <li><a class="item" href="#">&nbsp;</a><li>
+        <li><a class="item prev" href="#">&nbsp;</a><li>
+        <li><a class="item skip" href="#">&nbsp;</a><li>
+        <li><a class="item next" href="#">&nbsp;</a><li>
+        <li><a class="item" href="#">&nbsp;</a><li>
+        <li><a class="item" href="#">&nbsp;</a><li>
+        <li><a class="item" href="#">&nbsp;</a><li>
+        <li><a class="item last" href="#">&nbsp;</a><li>
+    </ul>
+
+    <ul id="zone3">
+        <li><a class="item" href="#">&nbsp;</a><li>
+        <li><a class="item" href="#">&nbsp;</a><li>
+        <li><a class="item last" href="#">&nbsp;</a><li>
+    </ul>
+
+    <div id="zone2">
+        <ul class="item_row">
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item last" href="#">&nbsp;</a><li>
+        </ul>
+        <ul class="item_row">
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item last" href="#">&nbsp;</a><li>
+        </ul>
+        <ul class="item_row last">
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item" href="#">&nbsp;</a><li>
+            <li><a class="item last" href="#">&nbsp;</a><li>
+        </ul>
+    </div>
+
+</body>
+</html>
